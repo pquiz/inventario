@@ -1,0 +1,108 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="my-inventorylist.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="../bower_components/iron-icons/communication-icons.html">
+<link rel="import" href="../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../bower_components/iron-icons/social-icons.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<!-- Paper elements -->
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-styles/typography.html">
+<link rel="import" href="../bower_components/iron-demo-helpers/demo-pages-shared-styles.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-styles/color.html">
+<link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<dom-module id="my-inventoryform">
+  <template>
+    <style include="shared-styles">
+    :host {
+      display: block;
+      --app-grid-columns: 4;
+      --app-grid-gutter: 10px;
+      --app-grid-expandible-item-columns: 4;
+    }
+    </style>
+    <div id="contenedor_inventory"class="layout horizontal wrap">
+      <div class="inventory_half">
+      <form is="iron-form" method="get" action="/" id="basic">
+    <paper-input name="inventario" id="inventario" label="Nombre inventario" required></paper-input>
+        <paper-input name="cantidad" id="cantidad" label="Cantidad" type="number"  required></paper-input>
+        <paper-input name="orden" id="orden" label="Punto de reorden" type="number"  required></paper-input>
+        <paper-checkbox name="read" required>You must check this box</paper-checkbox><br>
+        <paper-button class="secondary" raised onclick="submitForm(event)">Guardar</paper-button>
+        <paper-button  class="flat info"  onclick="_reset(event)">Cancelar</paper-button>
+
+      </form>
+    </div>
+
+      <template is="dom-repeat" items="{{elementos}}">
+        <div class="inventory_half  ">
+    <my-inventorylist desinventario="[[item]]"></my-inventorylist>
+      </div>
+    </template>
+
+    </div>
+
+
+
+  </template>
+
+  <script>
+  (function() {
+    'use strict';
+    Polymer({
+
+      is: 'my-inventoryform' ,
+       properties: {
+          elementos:{
+            type:Array,
+          notify:false
+        }
+      },
+  addInventario: function(inventarioe){
+    this.push('elementos', inventarioe);
+  }
+  ,ready: function() {
+    this.elementos = [
+      {inventario:'Programar', cantidad:100,orden:50}
+    ];
+  }
+
+    });
+})();
+    function submitForm(event) {
+      var form = Polymer.dom(event).localTarget.parentElement;
+      var inven=form.querySelector('#inventario').value;
+      var cant=form.querySelector('#cantidad').value;
+      var ord=form.querySelector('#orden').value;
+      form.parentNode.parentNode.parentNode.host.addInventario( {inventario:inven, cantidad:cant,orden:ord});
+     }
+     function _reset(event) {
+       var form = Polymer.dom(event).localTarget.parentElement
+       form.reset();
+       form.querySelector('.output').innerHTML = '';
+     }
+
+
+  </script>
+
+</dom-module>
